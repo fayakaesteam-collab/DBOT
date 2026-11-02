@@ -1,6 +1,6 @@
 const path = require("node:path");
 const fs = require("node:fs");
-const { DatabaseSync } = require("node:sqlite");
+const Database = require("better-sqlite3");
 const {
   Client,
   EmbedBuilder,
@@ -34,8 +34,9 @@ const logger = {
   error: (...args) => console.error(new Date().toISOString(), "ERROR", ...args),
 };
 
-const db = new DatabaseSync(DATABASE_PATH);
-db.exec("PRAGMA foreign_keys = ON");
+const db = new Database(DATABASE_PATH);
+db.defaultSafeIntegers(true);
+db.pragma("foreign_keys = ON");
 db.exec(`
   CREATE TABLE IF NOT EXISTS warnings (
     guild_id INTEGER NOT NULL,
@@ -65,7 +66,6 @@ const rules = loadRules();
 const getWarningCount = db.prepare(
   "SELECT count FROM warnings WHERE guild_id = ? AND user_id = ?",
 );
-getWarningCount.setReadBigInts(true);
 const saveWarningCount = db.prepare(`
   INSERT INTO warnings (guild_id, user_id, count)
   VALUES (?, ?, ?)
@@ -75,7 +75,6 @@ const saveWarningCount = db.prepare(`
 const getVerificationMessage = db.prepare(
   "SELECT message_id FROM verification_messages WHERE guild_id = ?",
 );
-getVerificationMessage.setReadBigInts(true);
 const saveVerificationMessage = db.prepare(`
   INSERT INTO verification_messages (guild_id, message_id)
   VALUES (?, ?)
