@@ -1,0 +1,17 @@
+{
+  "name": "dream-shore-discord-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Discord moderation and verification bot for Dream Shore",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "check": "node --check index.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "discord.js": "^14.19.3"
+  }
+}
